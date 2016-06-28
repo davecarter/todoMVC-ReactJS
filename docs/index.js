@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 const TodoMaker = (props) => {
   const check = e => {
     if(e.key == 'Enter'){
-      props.addTodo({text: e.target.value});
+      props.onAddTodo({text: e.target.value, done: false});
       e.target.value = '';
     }
   }
@@ -23,26 +23,22 @@ const TodoMaker = (props) => {
 
 class Todo extends React.Component {
   constructor(props){
-    super();
-    this.state = {
-      done: props.done
-    }
+    super(props);
   };
 
-  handleChange(){
-    this.setState({
-      done: !this.state.done
-    })
+  handleClick(){
+    this.props.onRemoveTodo(this.props.id);
   }
 
-  handleClick(){
-    this.props.removeTodo;
+  handleChange(){
+    this.props.onDone(this.props.text);
   }
 
   render(){
+
     return (
       <div className="view">
-        <input id={this.props.id} onChange={this.handleChange.bind(this)} checked={this.state.done} className="toggle" type="checkbox" />
+        <input id={this.props.id} onChange={this.handleChange.bind(this)} checked={this.props.done} className="toggle" type="checkbox" />
         <label>{this.props.text}</label>
         <button onClick={this.handleClick.bind(this)} className="destroy"></button>
       </div>
@@ -50,28 +46,37 @@ class Todo extends React.Component {
   }
 }
 
-const TodoList = (props) => {
-  const todos = props.todos.map((todo, index) => {
-    return (
-      <li key={index}>
-        <Todo removeTodo id={todo.id} done={todo.done} text={todo.text} />
-      </li>
-    );
-  });
+class TodoList extends React.Component {
+  constructor(){
+    super();
+  }
 
-  return (
-    <section className="main">
-    <ul className="todo-list">
-      {todos}
-    </ul>
-  </section>
-  );
+  render(){
+
+    const todos = this.props.todos.map((todo, index) => {
+      return (
+        <li key={index}>
+          <Todo {...this.props} id={index} done={todo.done} text={todo.text} />
+        </li>
+      );
+    });
+
+
+    return (
+      <section className="main">
+        <ul className="todo-list">
+          {todos}
+        </ul>
+      </section>
+    );
+
+  }
 }
 
 const TodoFooter = (props) => {
   return (
     <footer className="footer">
-      <span className="todo-count">3 items left</span>
+      <span className="todo-count">{props.itemsLeft} items left</span>
       <ul className="filters">
         <li><a href="#" className="selected">all</a></li>
         <li><a href="#">active</a></li>
@@ -95,36 +100,61 @@ class TodoApp extends React.Component {
     )
   }
 
+  handleChange(text){
+    const newState = this.state.todos.map((todo) => {
+        if(todo.text == text){
+          return {...todo, done: !todo.done}
+        }
+
+        return todo
+    });
+
+    this.updateState({
+      todos: newState
+    })
+
+  }
+
+  updateState(newState){
+    localStorage.setItem('MyTodoAppState', JSON.stringify(newState));
+    this.setState(newState)
+  }
+
   addTodo(todo){
     var currentTodos = this.state.todos;
     currentTodos.push(todo);
     var newState = {todos: currentTodos}
 
-    localStorage.setItem('MyTodoAppState', JSON.stringify(newState));
-    this.setState(newState);
+    this.updateState(newState);
   }
 
-  removeTodo(todo){
+  removeTodo(todoId){
     var currentTodos = this.state.todos;
-    currentTodos.splice(todo);
+    currentTodos.splice(todoId, 1);
     var newState = {todos: currentTodos}
 
-    localStorage.removeItem('MyTodoAppState', JSON.stringify(newState));
-    this.setState(newState);
+    this.updateState(newState);
   }
 
 
   componentDidMount(){
-    var initialState = JSON.parse(localStorage.getItem('MyTodoAppState'));
+    let initialState = JSON.parse(localStorage.getItem('MyTodoAppState'));
+    if (!initialState) {
+      initialState = {};
+    };
     this.setState(initialState);
   }
 
   render(){
+    const itemsLeft = this.state.todos.filter((todo) => {
+      return !todo.done === true;
+    }).length;
+
     return (
       <div className="todoapp">
-        <TodoMaker text={this.props.text} addTodo={this.addTodo.bind(this)}  />
-        <TodoList todos={this.state.todos} removeTodo={this.removeTodo.bind(this)} />
-        <TodoFooter />
+        <TodoMaker text={this.props.text} onAddTodo={this.addTodo.bind(this)}  />
+        <TodoList todos={this.state.todos} onDone={this.handleChange.bind(this)} onRemoveTodo={this.removeTodo.bind(this)} />
+        <TodoFooter itemsLeft={itemsLeft}/>
       </div>
     );
   }
