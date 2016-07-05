@@ -26,4 +26,4 @@ $ npm i
 - Filtrar ToDo's hechos/por hacer/mostrar todos
 
 Slides de la presentación:
--
+- [React Starter Kit](https://aprendiendofrontend.github.io/react-starter-kit/#/)
