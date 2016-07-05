@@ -77,11 +77,6 @@ const TodoFooter = (props) => {
   return (
     <footer className="footer">
       <span className="todo-count">{props.itemsLeft} items left</span>
-      <ul className="filters">
-        <li><a href="#" className="selected">all</a></li>
-        <li><a href="#">active</a></li>
-        <li><a href="#">completed</a></li>
-      </ul>
     </footer>
   );
 }
