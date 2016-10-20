@@ -28,7 +28,7 @@ body {
 	background: #f5f5f5;
 	color: #4d4d4d;
 	min-width: 230px;
-	max-width: 550px;
+	max-width: 700px;
 	margin: 0 auto;
 	-webkit-font-smoothing: antialiased;
 	-moz-font-smoothing: antialiased;
@@ -76,7 +76,7 @@ input[type="checkbox"] {
 .todoapp h1 {
 	position: absolute;
 	line-height: 1em;
-	top: -155px;
+	top: -185px;
 	width: 100%;
 	font-size: 100px;
 	font-weight: 100;
