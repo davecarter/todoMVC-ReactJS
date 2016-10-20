@@ -59,6 +59,8 @@ input[type="checkbox"] {
 	color: #e6e6e6;
 }
 
+
+
 .todoapp input::-moz-placeholder {
 	font-style: italic;
 	font-weight: 300;
@@ -207,7 +209,7 @@ label[for='toggle-all'] {
 	transition: color 0.4s;
 }
 
-.todo-list li.completed label {
+.todo-list label.completed {
 	color: #d9d9d9;
 	text-decoration: line-through;
 }

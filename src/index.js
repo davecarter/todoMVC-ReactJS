@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import cx from 'classnames';
 
 const TodoMaker = (props) => {
   const check = e => {
@@ -24,6 +24,8 @@ const TodoMaker = (props) => {
 class Todo extends React.Component {
   constructor(props){
     super(props);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   };
 
   handleClick(){
@@ -35,12 +37,15 @@ class Todo extends React.Component {
   }
 
   render(){
+    const classStatus = cx('input', {
+      'completed': this.props.done
+    })
 
     return (
       <div className="view">
-        <input id={this.props.id} onChange={this.handleChange.bind(this)} checked={this.props.done} className="toggle" type="checkbox" />
-        <label>{this.props.text}</label>
-        <button onClick={this.handleClick.bind(this)} className="destroy"></button>
+        <input id={this.props.id} onChange={this.handleChange} checked={this.props.done} className="toggle" type="checkbox" />
+        <label className={classStatus}>{this.props.text}</label>
+        <button onClick={this.handleClick} className="destroy"></button>
       </div>
     );
   }
