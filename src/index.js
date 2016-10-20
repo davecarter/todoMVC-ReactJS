@@ -1,14 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 const TodoMaker = (props) => {
-  const logger = (e) => {
-    console.log(e.target.value)
-    e.target.value = ''
-  }
-
   const onKeyPress = (e) => {
-    e.key === 'Enter' ? logger(e) : null
+    e.key === 'Enter' ? props.onLogger(e) : null
   }
 
   return (
@@ -21,7 +16,25 @@ const TodoMaker = (props) => {
   );
 }
 
+class TodoApp extends Component {
+  constructor(props){
+    super(props)
+    this.logger = this.logger.bind(this)
+  }
+
+  logger (e) {
+    console.log(e.target.value)
+    e.target.value = ''
+  }
+
+  render () {
+    return (
+      <TodoMaker {...this.props} onLogger={this.logger}/>
+    )
+  }
+}
+
 ReactDOM.render(
-  <TodoMaker title='ToDo ReactJS'/>,
+  <TodoApp title='ToDo ReactJS'/>,
   document.getElementById('app')
 );
