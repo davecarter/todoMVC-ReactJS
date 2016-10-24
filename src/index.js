@@ -3,17 +3,14 @@ import ReactDOM from 'react-dom';
 
 const TodoMaker = (props) => {
   const onKeyPress = (e) => {
-    if(e.key === 'Enter'){
-      props.onAddTodo({text: e.target.value, done: false})
-      e.target.value = ''
-    }
+    e.key === 'Enter' ? props.onLogger(e) : null
   }
 
   return (
     <section className='todoapp'>
       <header className="header">
         <h1>{props.title}</h1>
-        <input className='new-todo' onKeyPress={onKeyPress} placeholder={props.message} type='text' />
+        <input className='new-todo' onKeyPress={onKeyPress} placeholder={props.message} type={'text'}/>
       </header>
     </section>
   );
@@ -21,46 +18,44 @@ const TodoMaker = (props) => {
 
 const Todo = (props) => {
   return (
-    <div className="view">
-      <input className="toggle" type="checkbox"/>
-      <label>{props.text}</label>
-      <button className="destroy"></button>
-    </div>
+    <ul className="todo-list">
+      <li>
+        <div className="view">
+          <input className="toggle" type="checkbox" />
+          <label>{props.text}</label>
+          <button className="destroy"></button>
+        </div>
+      </li>
+    </ul>
   )
 }
 
 class TodoApp extends Component {
   constructor(props){
     super(props)
-    this.addTodo = this.addTodo.bind(this)
+    this.logger = this.logger.bind(this)
     this.state = {
-      todos : []
+      text: ''
     }
   }
 
-  updateState(newState){
-    localStorage.setItem('MyTodoAppState', JSON.stringify(newState));
-    this.setState(newState)
-  }
-
-  addTodo (todo) {
-    var currentTodos = this.state.todos;
-    currentTodos.push(todo);
-    var newState = {todos: currentTodos}
-    this.updateState(newState);
-    console.log(currentTodos.text)
+  logger (e) {
+    console.log(e.target.value)
+    this.setState({text: e.target.value})
+    e.target.value = ''
   }
 
   render () {
     return (
       <div className="todoapp">
-        <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
+        <TodoMaker {...this.props} onLogger={this.logger}/>
+        <Todo text={this.state.text} />
       </div>
     )
   }
 }
 
 ReactDOM.render(
-  <TodoApp title='ToDo ReactJS' message='What needs to be done? '/>,
+  <TodoApp title='ToDo ReactJS' message='What needs to be done'/>,
   document.getElementById('app')
 );
