@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 const TodoMaker = (props) => {
-  const onKeyPress = (e) => {
-    e.key === 'Enter' ? props.onLogger(e) : null
+  const onKeyPress = e => {
+    if(e.key == 'Enter'){
+      props.onAddTodo({text: e.target.value, done: false});
+      e.target.value = '';
+    }
   }
 
   return (
@@ -30,26 +33,50 @@ const Todo = (props) => {
   )
 }
 
+const TodoList = (props) => {
+  const todos = props.todos.map((todo, index) => {
+    return (
+      <li key={index}>
+        <Todo {...props} id={index} done={todo.done} text={todo.text} />
+      </li>
+    );
+  });
+
+  return (
+    <section className="main">
+      <ul className="todo-list">
+        {todos}
+      </ul>
+    </section>
+  )
+}
+
 class TodoApp extends Component {
   constructor(props){
     super(props)
-    this.logger = this.logger.bind(this)
+    this.addTodo = this.addTodo.bind(this)
     this.state = {
-      text: ''
+      todos: []
     }
   }
 
-  logger (e) {
-    console.log(e.target.value)
-    this.setState({text: e.target.value})
-    e.target.value = ''
+  updateState(newState){
+    this.setState(newState)
+  }
+
+  addTodo(todo){
+    var currentTodos = this.state.todos;
+    currentTodos.push(todo);
+    var newState = {todos: currentTodos}
+
+    this.updateState(newState);
   }
 
   render () {
     return (
       <div className="todoapp">
-        <TodoMaker {...this.props} onLogger={this.logger}/>
-        <Todo text={this.state.text} />
+        <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
+        <TodoList todos={this.state.todos} />
       </div>
     )
   }
