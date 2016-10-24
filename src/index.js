@@ -19,6 +19,16 @@ const TodoMaker = (props) => {
   );
 }
 
+const Todo = (props) => {
+  return (
+    <div className="view">
+      <input className="toggle" type="checkbox"/>
+      <label>{props.text}</label>
+      <button className="destroy"></button>
+    </div>
+  )
+}
+
 class TodoApp extends Component {
   constructor(props){
     super(props)
@@ -38,11 +48,14 @@ class TodoApp extends Component {
     currentTodos.push(todo);
     var newState = {todos: currentTodos}
     this.updateState(newState);
+    console.log(currentTodos.text)
   }
 
   render () {
     return (
-      <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
+      <div className="todoapp">
+        <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
+      </div>
     )
   }
 }
