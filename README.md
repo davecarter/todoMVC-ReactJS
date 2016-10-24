@@ -2,6 +2,5 @@
 
 Versión didáctica del TODOmvc para iniciarse en ReactJS.
 
-### Step 03
-Creamos un componente de orden superior *statefull* llamado `TodoApp`. La función *logger* anterior la movemos a este componente y la pasamos por *props* a `TodoMaker`.
-De esta forma vemos como podemos pasar de un componente de orden superior a otro no sólo valores de tipo *string* sino funciones.
+### Step 04
+Ahora que ya disponemos del componente `TodoApp` de *wrapper*, creamos otro componente nuevo que se encargue de obtener los datos que enviamos a consola y los muestre un ToDo situado bajo `TodoMaker`.
