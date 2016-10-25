@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 const TodoMaker = (props) => {
   const onKeyPress = e => {
     if(e.key == 'Enter'){
-      props.onAddTodo({text: e.target.value, done: false});
+      props.onAddTodo({text: e.target.value, done: false, id: new Date().toISOString()});
       e.target.value = '';
     }
   }
@@ -19,25 +19,41 @@ const TodoMaker = (props) => {
   );
 }
 
-const Todo = (props) => {
-  return (
-    <ul className="todo-list">
-      <li>
-        <div className="view">
-          <input className="toggle" type="checkbox" />
-          <label>{props.text}</label>
-          <button className="destroy"></button>
-        </div>
-      </li>
-    </ul>
-  )
+class Todo extends React.Component {
+  constructor(props){
+    super(props);
+    this.handleChange = this.handleChange.bind(this)
+  };
+
+  handleChange () {
+    this.props.onDone(this.props.id);
+  }
+
+  render(){
+    const { id, done, text, onEditTodo } = this.props
+    return (
+      <div className="view">
+        <input
+          id={id}
+          onChange={this.handleChange}
+          checked={done}
+          className="toggle"
+          type="checkbox"/>
+        <label>{this.props.text}</label>
+        <button className="destroy"></button>
+      </div>
+    );
+  }
 }
 
 const TodoList = (props) => {
   const todos = props.todos.map((todo, index) => {
     return (
       <li key={index}>
-        <Todo {...props} id={index} done={todo.done} text={todo.text} />
+        <Todo {...props}
+          id={todo.id}
+          done={todo.done}
+          text={todo.text} />
       </li>
     );
   });
@@ -53,6 +69,7 @@ class TodoApp extends Component {
   constructor(props){
     super(props)
     this.addTodo = this.addTodo.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.state = {
       todos: []
     }
@@ -71,6 +88,20 @@ class TodoApp extends Component {
     this.setState(newState)
   }
 
+  handleChange (id) {
+    const newState = this.state.todos.map(todo => {
+      if (todo.id == id){
+        return {...todo, done: !todo.done}
+      }
+
+      return todo
+    });
+
+    this.updateState({
+      todos: newState
+    })
+  }
+
   addTodo(todo){
     var currentTodos = this.state.todos;
     currentTodos.push(todo);
@@ -83,7 +114,7 @@ class TodoApp extends Component {
     return (
       <div className="todoapp">
         <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
-        <TodoList todos={this.state.todos} />
+        <TodoList todos={this.state.todos} onDone={this.handleChange}/>
       </div>
     )
   }
