@@ -58,7 +58,16 @@ class TodoApp extends Component {
     }
   }
 
+  componentDidMount(){
+    let initialState = JSON.parse(localStorage.getItem('MyTodoAppState'));
+    if (!initialState) {
+      initialState = {};
+    };
+    this.setState(initialState);
+  }
+
   updateState(newState){
+    localStorage.setItem('MyTodoAppState', JSON.stringify(newState));
     this.setState(newState)
   }
 
