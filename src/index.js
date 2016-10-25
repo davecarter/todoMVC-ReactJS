@@ -43,11 +43,9 @@ const TodoList = (props) => {
   });
 
   return (
-    <section className="main">
-      <ul className="todo-list">
-        {todos}
-      </ul>
-    </section>
+    <ul className="todo-list">
+      {todos}
+    </ul>
   )
 }
 
