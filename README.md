@@ -10,4 +10,4 @@ En esta rama sólo mostramos un componente Helloworld sin estado y le pasamos pr
 
 ### Vídeo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/mxNKpGK8stE" frameborder="0" allowfullscreen></iframe>
+[![ReactJS - Hello World](assets/step01.jpg)](https://youtu.be/mxNKpGK8stE)
