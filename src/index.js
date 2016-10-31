@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import cx from 'classnames';
 
 const TodoMaker = (props) => {
   const onKeyPress = e => {
@@ -53,8 +54,9 @@ class Todo extends Component {
 
 const TodoList = (props) => {
   const todos = props.todos.map((todo, index) => {
+    const completed = cx({'completed': todo.done })
     return (
-      <li key={index}>
+      <li key={index} className={completed}>
         <Todo {...props}
           id={todo.id}
           done={todo.done}
@@ -118,7 +120,8 @@ class TodoApp extends Component {
   }
 
   removeTodo (id) {
-    console.log('REMOVED', id)
+    var newState = this.state.todos.filter(todo => todo.id !== id)
+    this.updateState({ todos: newState });
   }
 
   render () {
