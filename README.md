@@ -9,9 +9,9 @@ Pasaremos por *props* una función desde el componente de orden superior **TodoA
 
 ### Tachar *ToDo*
 
-Para cambiar el aspecto del *ToDo* que marcamos como *Done* utilizaremos `classnames`. Previamente la instalaremos como dependencia de desarrollo mediante: `npm i classnames -S`.
+Para cambiar el aspecto del *ToDo* que marcamos como *Done* utilizaremos `classnames`. Previamente la instalaremos como dependencia mediante: `npm i classnames -S`.
 
-Se trata de una aplicación que nos permite añadir o quitar clases en base a lo que evalue un valor booleano. En este caso haremos:
+[Classnames](https://www.npmjs.com/package/classnames) es una aplicación que nos permite añadir o quitar clases en base a lo que evalue un valor booleano. En este caso haremos:
 
 ```javascript
 // Importamos classnames como cx:
@@ -27,4 +27,4 @@ Para aplicarla utilizaremos:
 ```
 Recordad que no podemos utilizar la palabla `class` ya que es una keyword de JavaScript. Por eso se usa `className`.
 
-El motivo de usar la clase `completed` es unicamente para no tener que modificar los selectores CSS originales de la aplicación todomvc.com.
+El motivo de usar la clase `completed` es unicamente para no tener que modificar los selectores CSS originales de la aplicación [todomvc.com](todomvc.com/examples/react/#/).
