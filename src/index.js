@@ -20,6 +20,48 @@ const TodoMaker = (props) => {
   );
 }
 
+class Label extends Component {
+  constructor(...args){
+    super(...args);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.state = {
+      editing: false
+    }
+  }
+
+  handleKeyPressed (id, e) {
+    if (e.key == 'Enter') {
+      this.props.onEdit({ text: e.target.value, id: id });
+      e.target.value = '';
+      this.setState({ editing: false });
+    }
+  }
+
+  handleDoubleClick(){
+    this.setState({
+      editing: true
+    })
+  }
+
+  handleChange (id, e) {
+    this.props.onEdit({ text: e.target.value, id: id})
+  }
+
+  render(){
+    const { id, text } = this.props
+
+    return this.state.editing
+      ? <input
+          autoFocus
+          className='new-todo'
+          onKeyPress={this.handleKeyPressed.bind(this, id)}
+          value={this.props.text}
+          onChange={this.handleChange.bind(this, id)}/>
+      : <label
+          onDoubleClick={this.handleDoubleClick}>{this.props.text}</label>
+  }
+}
+
 class Todo extends Component {
   constructor(props){
     super(props);
@@ -45,7 +87,7 @@ class Todo extends Component {
           checked={done}
           className="toggle"
           type="checkbox"/>
-        <label>{this.props.text}</label>
+        <Label id={id} text={text} onEdit={onEditTodo}/>
         <button onClick={this.handleRemove} className="destroy"></button>
       </div>
     );
@@ -61,7 +103,8 @@ const TodoList = (props) => {
           id={todo.id}
           done={todo.done}
           text={todo.text}
-          onRemoveTodo={props.onRemoveTodo} />
+          onRemoveTodo={props.onRemoveTodo}
+          onEditTodo={props.onEditTodo} />
       </li>
     );
   });
@@ -79,6 +122,7 @@ class TodoApp extends Component {
     this.addTodo = this.addTodo.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.removeTodo = this.removeTodo.bind(this)
+    this.editTodo = this.editTodo.bind(this)
     this.state = {
       todos: []
     }
@@ -124,6 +168,18 @@ class TodoApp extends Component {
     this.updateState({ todos: newState });
   }
 
+  editTodo ({ id, text }) {
+    var newState = this.state.todos.map( todo => {
+      if(id !== todo.id){
+        return todo
+      } else {
+        return { ...todo, text: text }
+      }
+    });
+
+    this.updateState({ todos: newState });
+  }
+
   render () {
     return (
       <div className="todoapp">
@@ -131,7 +187,8 @@ class TodoApp extends Component {
         <TodoList
           todos={this.state.todos}
           onDone={this.handleChange}
-          onRemoveTodo={this.removeTodo} />
+          onRemoveTodo={this.removeTodo}
+          onEditTodo={this.editTodo} />
       </div>
     )
   }
