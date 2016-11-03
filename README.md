@@ -1,30 +1,44 @@
 ## TODOmvc ReactJS
-### Step 08
-- Borrar *ToDo*
+### Step 09
+- Editar *ToDo*
 
-Utilizamos la clave *id* que contiene un *time stamp* único para cada objeto que define un *ToDo* para eliminarlo del array de objetos que conforman el estado de la aplicación. Además añadimos una clase que *tacha* el contenido del *ToDo* cuando lo marcamos como *done*.
+La funcionalidad de *editar* la implementaremos haciendo doble click en el contenido del label de cada *ToDo*.
+Si el usuario hace doble-click cambiaremos el elemento *label* por un *input* para que pueda introducir un contenido nuevo.
 
-Pasaremos por *props* una función desde el componente de orden superior **TodoApp** hasta el componente **Todo**.
-
-
-### Tachar *ToDo*
-
-Para cambiar el aspecto del *ToDo* que marcamos como *Done* utilizaremos `classnames`. Previamente la instalaremos como dependencia mediante: `npm i classnames -S`.
-
-[Classnames](https://www.npmjs.com/package/classnames) es una aplicación que nos permite añadir o quitar clases en base a lo que evalue un valor booleano. En este caso haremos:
+Para poder añadir esta funcionalidad convertiremos el elemento *label* actual a componente statefull de ReactJS, para que pueda almacenar el estado de *modo normal* o *modo edición*. En función de qué estado tenga el componente retornará un elemento *label* o un *input*.
 
 ```javascript
-// Importamos classnames como cx:
-import cx from 'classnames';
+// El método Render del componente Todo pasará de ser así:
 
-// Guardamos en la variable completed la cadena 'completed' sólo cuando la prop 'todo.done' evalue 'true':
-const completed = cx({'completed': todo.done })
+render(){
+    const { id, done, text, onEditTodo } = this.props
+    return (
+      <div className="view">
+        <input
+          id={id}
+          onChange={this.handleChange}
+          checked={done}
+          className="toggle"
+          type="checkbox"/>
+        // Actualment insertamos en el elemento label lo que recibe por la prop text
+        <label>{this.props.text}</label>
+        <button onClick={this.handleRemove} className="destroy"></button>
+      </div>
+    );
+  }
 ```
 
-Para aplicarla utilizaremos:
-```HTML
-<li key={index} className={completed}>
+Una vez convertido a componente le pasaremos las siguientes props: id, text y onEdit:
+```javascript
+render(){
+    const { id, done, text, onEditTodo } = this.props
+    return (
+      <div className="view">
+        <input id={id} onChange={this.handleChange.bind(this)} checked={done} className="toggle" type="checkbox"/>
+        // Le pasamos las props id, text y onEditTodo directamente gracias al destructuring previo.
+        <Label id={id} text={text} onEdit={onEditTodo}/>
+        <button onClick={this.handleClick.bind(this)} className="destroy"></button>
+      </div>
+    );
+  }
 ```
-Recordad que no podemos utilizar la palabla `class` ya que es una keyword de JavaScript. Por eso se usa `className`.
-
-El motivo de usar la clase `completed` es unicamente para no tener que modificar los selectores CSS originales de la aplicación [todomvc.com](todomvc.com/examples/react/#/).
