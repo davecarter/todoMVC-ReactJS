@@ -42,3 +42,56 @@ render(){
     );
   }
 ```
+
+### Componente Label
+
+Cuando el nuevo componente label tenga en su estado un objeto con el valor `{ editing: false }` retornará un elemento `<label></label>`. En caso contrario, si el valor es `true` retornará un `<input />` para que el usuario pueda introducir el nuevo contenido que ha de tener el *ToDo* que estamos editando. Para validar la edición pulsaremos *Enter* y cmbiaremos de nuevo el estado de *editing* a `false`.
+
+```javascript
+class Label extends Component {
+  constructor(...args){
+    super(...args);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.state = {
+      editing: false
+    }
+  }
+
+  handleKeyPressed (id, e) {
+    if (e.key == 'Enter') {
+      this.props.onEdit({ text: e.target.value, id: id });
+      e.target.value = '';
+      this.setState({ editing: false });
+    }
+  }
+
+  handleDoubleClick(){
+    this.setState({
+      editing: true
+    })
+  }
+
+  handleChange (id, e) {
+    this.props.onEdit(
+      {
+        text: e.target.value,
+        id: id
+      }
+    )
+  }
+
+  render(){
+    const { id, text } = this.props
+
+    return this.state.editing
+      ? <input
+          autoFocus
+          className='new-todo'
+          onKeyPress={this.handleKeyPressed.bind(this, id)}
+          value={this.props.text}
+          onChange={this.handleChange.bind(this, id)}/>
+      : <label
+          onDoubleClick={this.handleDoubleClick}>{this.props.text}</label>
+  }
+}
+```
