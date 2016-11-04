@@ -116,6 +116,44 @@ const TodoList = (props) => {
   )
 }
 
+class TodoFooter extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      activeFilter: {
+        'all': false,
+        'active': false,
+        'completed': false
+      }
+    }
+    this.handleClickAll = this.handleClickAll.bind(this)
+  }
+
+  handleClickAll () {
+    this.setState({activeFilter: {'all': true}})
+  }
+
+  render (){
+    const { itemsLeft } = this.props;
+    const filterClass = cx({
+      'selected': this.state.activeFilter.all,
+      'selected': this.state.activeFilter.active,
+      'selected': this.state.activeFilter.completed
+    })
+
+    return(
+      <footer className='footer'>
+      <span className='todo-count'>{itemsLeft} items left</span>
+        <ul className='filters'>
+          <li><a href='#' onClick={this.handleClickAll} className={filterClass}>All</a></li>
+          <li><a href='#' onClick={this.handleClick} className={filterClass}>Active</a></li>
+          <li><a href='#' onClick={this.handleClick} className={filterClass}>Completed</a></li>
+        </ul>
+      </footer>
+    )
+  }
+}
+
 class TodoApp extends Component {
   constructor(props){
     super(props)
@@ -181,6 +219,7 @@ class TodoApp extends Component {
   }
 
   render () {
+    const itemsLeft = this.state.todos.lenght
     return (
       <div className="todoapp">
         <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
@@ -189,6 +228,7 @@ class TodoApp extends Component {
           onDone={this.handleChange}
           onRemoveTodo={this.removeTodo}
           onEditTodo={this.editTodo} />
+        <TodoFooter itemsLeft={itemsLeft} />
       </div>
     )
   }
