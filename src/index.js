@@ -126,28 +126,28 @@ class TodoFooter extends Component {
         'completed': false
       }
     }
-    this.handleClickAll = this.handleClickAll.bind(this)
   }
 
-  handleClickAll () {
-    this.setState({activeFilter: {'all': true}})
+  handleClick (filter) {
+    const nextActiveFilters = Object.assign(
+      {},
+      {all: false, active: false, completed: false},
+      {[filter]: !this.state.activeFilter[filter]}
+    )
+    this.setState({activeFilter: nextActiveFilters})
   }
 
   render (){
     const { itemsLeft } = this.props;
-    const filterClass = cx({
-      'selected': this.state.activeFilter.all,
-      'selected': this.state.activeFilter.active,
-      'selected': this.state.activeFilter.completed
-    })
-
+    const {all, active, completed} = this.state.activeFilter
+    const classNameFilter = (filter) => filter ? 'selected' : ''
     return(
       <footer className='footer'>
       <span className='todo-count'>{itemsLeft} items left</span>
         <ul className='filters'>
-          <li><a href='#' onClick={this.handleClickAll} className={filterClass}>All</a></li>
-          <li><a href='#' onClick={this.handleClick} className={filterClass}>Active</a></li>
-          <li><a href='#' onClick={this.handleClick} className={filterClass}>Completed</a></li>
+          <li><a href='#' onClick={this.handleClick.bind(this, 'all')} className={classNameFilter(all)}>All</a></li>
+          <li><a href='#' onClick={this.handleClick.bind(this, 'active')} className={classNameFilter(active)}>Active</a></li>
+          <li><a href='#' onClick={this.handleClick.bind(this, 'completed')} className={classNameFilter(completed)} >Completed</a></li>
         </ul>
       </footer>
     )
@@ -219,7 +219,7 @@ class TodoApp extends Component {
   }
 
   render () {
-    const itemsLeft = this.state.todos.lenght
+    const itemsLeft = this.state.todos.filter(todo => !todo.done).length
     return (
       <div className="todoapp">
         <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
