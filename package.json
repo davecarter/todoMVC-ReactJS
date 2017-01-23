@@ -1,7 +1,7 @@
 {
   "name": "sc-react-workshop",
   "version": "1.0.0",
-  "description": "",
+  "description": "hola q tal",
   "main": "index.js",
   "scripts": {
     "start": "npm run open && npm run serve",
