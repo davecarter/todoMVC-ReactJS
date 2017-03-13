@@ -79,6 +79,7 @@ class Todo extends Component {
 
   render(){
     const { id, done, text, onEditTodo } = this.props
+
     return (
       <div className="view">
         <input
@@ -95,7 +96,12 @@ class Todo extends Component {
 }
 
 const TodoList = (props) => {
-  const todos = props.todos.map((todo, index) => {
+  let todos = props.todos.filter(todo => ((todo.done === !props.activeFilter.active) || (todo.done === props.activeFilter.completed)))
+
+  todos = todos.map((todo, index) => {
+    if ((todo.done === props.activeFilter.active) && (todo.done === !props.activeFilter.completed)) {
+      return null
+    }
     const completed = cx({'completed': todo.done })
     return (
       <li key={index} className={completed}>
@@ -108,7 +114,7 @@ const TodoList = (props) => {
       </li>
     );
   });
-
+  
   return (
     <ul className="todo-list">
       {todos}
@@ -119,35 +125,19 @@ const TodoList = (props) => {
 class TodoFooter extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      activeFilter: {
-        'all': false,
-        'active': false,
-        'completed': false
-      }
-    }
-  }
-
-  handleClick (filter) {
-    const nextActiveFilters = Object.assign(
-      {},
-      {all: false, active: false, completed: false},
-      {[filter]: !this.state.activeFilter[filter]}
-    )
-    this.setState({activeFilter: nextActiveFilters})
   }
 
   render (){
     const { itemsLeft } = this.props;
-    const {all, active, completed} = this.state.activeFilter
+    const {all, active, completed} = this.props.activeFilter
     const classNameFilter = (filter) => filter ? 'selected' : ''
     return(
       <footer className='footer'>
       <span className='todo-count'>{itemsLeft} items left</span>
         <ul className='filters'>
-          <li><a href='#' onClick={this.handleClick.bind(this, 'all')} className={classNameFilter(all)}>All</a></li>
-          <li><a href='#' onClick={this.handleClick.bind(this, 'active')} className={classNameFilter(active)}>Active</a></li>
-          <li><a href='#' onClick={this.handleClick.bind(this, 'completed')} className={classNameFilter(completed)} >Completed</a></li>
+          <li><a href='#' onClick={this.props.onChangeFilter('all')} className={classNameFilter(all)}>All</a></li>
+          <li><a href='#' onClick={this.props.onChangeFilter('active')} className={classNameFilter(active)}>Active</a></li>
+          <li><a href='#' onClick={this.props.onChangeFilter('completed')} className={classNameFilter(completed)} >Completed</a></li>
         </ul>
       </footer>
     )
@@ -161,8 +151,14 @@ class TodoApp extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.removeTodo = this.removeTodo.bind(this)
     this.editTodo = this.editTodo.bind(this)
+    this.changeFilter = this.changeFilter.bind(this)
     this.state = {
-      todos: []
+      todos: [],
+      activeFilter: {
+        'all': true,
+        'active': false,
+        'completed': false
+      }
     }
   }
 
@@ -191,6 +187,19 @@ class TodoApp extends Component {
     this.updateState({
       todos: newState
     })
+  }
+
+  changeFilter (filter) {
+    return (
+      () => {
+        const nextActiveFilters = Object.assign(
+          {},
+          {all: false, active: false, completed: false},
+          {[filter]: !this.state.activeFilter[filter]}
+        )
+        this.setState({activeFilter: nextActiveFilters})
+      }
+    )
   }
 
   addTodo (todo) {
@@ -222,13 +231,14 @@ class TodoApp extends Component {
     const itemsLeft = this.state.todos.filter(todo => !todo.done).length
     return (
       <div className="todoapp">
-        <TodoMaker {...this.props} onAddTodo={this.addTodo}/>
+        <TodoMaker {...this.props} onAddTodo={this.addTodo} />
         <TodoList
           todos={this.state.todos}
+          activeFilter={this.state.activeFilter}
           onDone={this.handleChange}
           onRemoveTodo={this.removeTodo}
           onEditTodo={this.editTodo} />
-        <TodoFooter itemsLeft={itemsLeft} />
+        <TodoFooter onChangeFilter={this.changeFilter} activeFilter={this.state.activeFilter} itemsLeft={itemsLeft} />
       </div>
     )
   }
