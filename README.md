@@ -5,7 +5,7 @@
 La aplicación dispone de un *footer* en el que se muestran los items pendientes, los que están activos, completados, etc... En este *step* replicaremos estas funcionalidades. Crearemos un muevo componente llamado **TodoFooter** que retornará los elementos del DOM necesarios para mostrar esta información.
 
 Crearemos un nuevo componente `TodoFooter`:
-```
+```javascript
 class TodoFooter extends Component {
   constructor(props){
     super(props)
@@ -29,7 +29,7 @@ class TodoFooter extends Component {
 }
 ```
 Añadiremos los filtros en el state del componente `TodoApp`:
-```
+```javascript
 this.state = {
   todos: [],
   activeFilter: {
@@ -40,7 +40,7 @@ this.state = {
 }
 ```
 En el mismo componente añadiremos el método `changeFilter`. Este método se encargará deponer los tres estados en `false` y posteriormente pasar a `true` el filtro selecionado.
-```
+```javascript
 changeFilter (filter) {
   return (
     () => {
@@ -55,7 +55,7 @@ changeFilter (filter) {
 }
 ```
 Y filtraremos los resultados en el componente `TodoList`:
-```
+```javascript
 if ((todo.done === props.activeFilter.active) && (todo.done === !props.activeFilter.completed)) {
   return null
 }
