@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./dist/index.js",
   debug: true,
   devtool: 'source-map',
   output: {
