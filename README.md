@@ -34,7 +34,8 @@ static get propTypes () {
 }
 ```
 
-Cambiamos los `bind` de los constructores por arrow functions:
+Cambiamos los `bind` del `constructor` por [transform class properties](https://babeljs.io/docs/plugins/transform-class-properties/).
+Para poder utilizar arrow functions en las clases es necesario que tengamos seteado el stage correcto de Babel. En nuestro caso, como ya estamos en el `stage 1`, ya nos sirve.
 ```javascript
 handleDoubleClick = () => {
   this.setState({
