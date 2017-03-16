@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import cx from 'classnames';
+import React, { PropTypes } from 'react'
+import cx from 'classnames'
 import Todo from '../Todo'
 
 const TodoList = (props) => {
@@ -9,19 +9,24 @@ const TodoList = (props) => {
     if ((todo.done === props.activeFilter.active) && (todo.done === !props.activeFilter.completed)) {
       return null
     }
-    const completed = cx({'completed': todo.done })
+    const completed = cx({ 'completed': todo.done })
     return (
       <li key={index} className={completed}>
         <Todo {...props} {...todo} />
       </li>
-    );
-  });
+    )
+  })
 
   return (
-    <ul className="todo-list">
+    <ul className='todo-list'>
       {todos}
     </ul>
   )
+}
+
+TodoList.propTypes = {
+  todos: PropTypes.array,
+  activeFilter: PropTypes.object
 }
 
 export default TodoList

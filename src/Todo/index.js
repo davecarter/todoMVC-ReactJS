@@ -1,41 +1,46 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react'
 import Label from '../Label'
 
 export default class Todo extends Component {
-  constructor(props){
-    super(props);
-    this.handleChange = this.handleChange.bind(this)
-    this.handleRemove = this.handleRemove.bind(this)
-  };
-
-  handleChange () {
-    this.props.onDone(this.props.id);
+  static get propTypes () {
+    return {
+      onDone: PropTypes.func,
+      onRemoveTodo: PropTypes.func,
+      onEditTodo: PropTypes.func,
+      id: PropTypes.string,
+      text: PropTypes.string,
+      done: PropTypes.bool,
+      lazyLoadSlider: PropTypes.bool
+    }
   }
 
-  handleRemove () {
-    this.props.onRemoveTodo(this.props.id);
+  handleChange = () => {
+    this.props.onDone(this.props.id)
   }
 
-  render(){
+  handleRemove = () => {
+    this.props.onRemoveTodo(this.props.id)
+  }
+
+  render () {
     const { id, done, text, onEditTodo } = this.props
 
     return (
-      <div className="view">
+      <div className='view'>
         <input
           id={id}
           onChange={this.handleChange}
           checked={done}
-          className="toggle"
-          type="checkbox"/>
+          className='toggle'
+          type='checkbox' />
         <Label
           id={id}
           text={text}
-          onEdit={onEditTodo}/>
+          onEdit={onEditTodo} />
         <button
           onClick={this.handleRemove}
-          className="destroy">
-        </button>
+          className='destroy' />
       </div>
-    );
+    )
   }
 }
