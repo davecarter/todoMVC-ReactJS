@@ -7,9 +7,7 @@ const TodoMaker = (props) => {
     e.target.value = ''
   }
 
-  const onKeyPress = (e) => {
-    e.key === 'Enter' ? logger(e) : null
-  }
+  const onKeyPress = (e) => e.key === 'Enter' ? logger(e) : null
 
   return (
     <section className='todoapp'>
